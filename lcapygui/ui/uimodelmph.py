@@ -7,7 +7,9 @@ from warnings import warn
 
 
 class Cursor:
-
+    """
+    A cursor a single point on the schematic that is used to add components
+    """
     def __init__(self, ui, x, y):
 
         self.sketcher = ui.sketcher
@@ -17,25 +19,41 @@ class Cursor:
 
     @property
     def position(self):
-
+        """
+        Returns the position of the Cursor
+        :return: x, y
+        """
         return self.x, self.y
 
     def draw(self, color='red', radius=0.3):
-
+        """
+        Draws the cursor on the schematic
+        :param color: The colour of the Cursor
+        :param radius: Radius of the cursor
+        :return: None
+        """
         self.patch = self.sketcher.stroke_filled_circle(self.x, self.y,
                                                         radius,
                                                         color=color,
                                                         alpha=0.5)
 
     def remove(self):
-
+        """
+        Removes the cursor from the schematic
+        :return: None
+        """
         self.patch.remove()
 
 
 class Cursors(list):
-
+    """
+    Defines a pair of cursors
+    """
     def debug(self):
-
+        """
+        Returns a string representation of the cursors
+        :return:
+        """
         s = ''
         for cursor in self:
             s += '%s, %s' % (cursor.x, cursor.y) + '\n'
@@ -226,7 +244,11 @@ class UIModelMPH(UIModelBase):
         self.add_cursor(x, y)
 
     def on_add_cpt(self, cpt_key):
-
+        """
+        Adds a component between the specified cursors after a key is pressed
+        :param cpt_key: key pressed
+        :return: None
+        """
         if self.ui.debug:
             print(cpt_key)
 
