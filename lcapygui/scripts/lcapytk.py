@@ -44,6 +44,9 @@ def main(argv=None):
     parser.add_argument('--expr', type=str,
                         dest='expr', default=None,
                         help="Lcapy expression")
+    parser.add_argument('--model', type=str,
+                        dest='model', default="UIModelMPH",
+                        help="select the UI model: UIModelMPH, UIModelDnD")
     parser.add_argument('filenames', type=str, nargs='*',
                         help='schematic filename(s)', default=[])
 
@@ -52,7 +55,7 @@ def main(argv=None):
     if args.pdb:
         sys.excepthook = schtex_exception
 
-    e = LcapyTk(args.filenames, debug=args.debug)
+    e = LcapyTk(args.filenames, debug=args.debug, uimodel_class=args.model)
 
     if args.expr is not None:
         dialog = e.show_expr_dialog(lcapify(args.expr))

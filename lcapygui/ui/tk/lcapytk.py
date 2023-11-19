@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk
 from os.path import basename
 from ..uimodelmph import UIModelMPH
+from ..uimodeldnd import UIModelDnD
 from .sketcher import Sketcher
 from .drawing import Drawing
 from .menu import MenuBar, MenuDropdown, MenuItem, MenuSeparator
@@ -34,9 +35,20 @@ class LcapyTk(Tk):
         self.sketchlib = SketchLibrary()
         self.dialogs = {}
 
-        if uimodel_class is None:
+        # Select the UI model based on the command line argument
+        # Defaults to UIModelMPH if the model is unknown
+
+        if uimodel_class.lower() in ['uimodeldnd', 'dnd']:
+            uimodel_class = UIModelDnD
+        else:
+            if self.debug:
+                print('unknown model:', uimodel_class)
             uimodel_class = UIModelMPH
+
         self.uimodel_class = uimodel_class
+
+        if self.debug:
+            print('model: ', self.uimodel_class)
 
         # Title and size of the window
         self.title('Lcapy-tk ' + __version__)
@@ -355,7 +367,6 @@ class LcapyTk(Tk):
             return
 
         if self.debug:
-
             print('Button event %s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
                   ('double' if event.dblclick else 'single', event.button,
                    event.x, event.y, event.xdata, event.ydata))
@@ -432,10 +443,6 @@ class LcapyTk(Tk):
 
         err = traceback.format_exception(*args)
         messagebox.showerror('Exception', err)
-
-        if self.debug:
-            import pdb
-            pdb.set_trace()
 
     def on_expression(self, *args):
 
